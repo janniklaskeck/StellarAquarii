@@ -1,4 +1,4 @@
-package com.solusgames.game;
+package com.solusgames.stellaraquarii;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;

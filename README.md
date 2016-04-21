@@ -1,2 +1,0 @@
-# StellarAquarii
-Space Game
