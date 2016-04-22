@@ -5,8 +5,13 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.solusgames.stellaraquarii.StellarAquariiMain;
 
 public class DesktopLauncher {
-	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new StellarAquariiMain(), config);
-	}
+
+    private DesktopLauncher() {
+    }
+
+    public static void main(String[] arg) {
+
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        new LwjglApplication(new StellarAquariiMain(), config);// NOSONAR
+    }
 }
