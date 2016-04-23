@@ -26,6 +26,9 @@ public class StellarAquariiMain extends ApplicationAdapter {
     World world = new World(new Vector2(0, -10), true);
     Box2DDebugRenderer dRenderer;
     OrthographicCamera oCam;
+    float x = 100.0f;
+    float y = 300.0f;
+    Body body;
 
     @Override
     public void create() {
@@ -44,7 +47,7 @@ public class StellarAquariiMain extends ApplicationAdapter {
     private void createGround() {
         BodyDef groundDef = new BodyDef();
         groundDef.position.set(0, 10);
-        Body body = world.createBody(groundDef);
+        world.createBody(groundDef);
         PolygonShape box = new PolygonShape();
         box.setAsBox(oCam.viewportWidth, 10.0f);
         body.createFixture(box, 0.0f);
@@ -63,25 +66,20 @@ public class StellarAquariiMain extends ApplicationAdapter {
         world.step(1 / 60f, 6, 2);
     }
 
-    float x = 100.0f;
-    float y = 300.0f;
-
     private void handleInput() {
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            body.applyLinearImpulse(new Vector2(100,0), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(100, 0), body.getWorldCenter(), true);
         } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            body.applyLinearImpulse(new Vector2(-100,0), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(-100, 0), body.getWorldCenter(), true);
         } else if (Gdx.input.isKeyPressed(Input.Keys.UP) && !body.isAwake()) {
-            body.applyLinearImpulse(new Vector2(0,100), body.getWorldCenter(), true);
+            body.applyLinearImpulse(new Vector2(0, 100), body.getWorldCenter(), true);
         }
-        
+
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
 
     }
-
-    Body body;
 
     private void createPhysics() {
         Box2D.init();
