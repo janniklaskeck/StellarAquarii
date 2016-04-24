@@ -16,11 +16,6 @@
 		<link>
 			<name>assets</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/core/assets</locationURI>
-		</link>
-		<link>
-			<name>assets</name>
-			<type>2</type>
 			<location>PARENT-1-PROJECT_LOC/core/assets</location>
 		</link>
 	</linkedResources>
