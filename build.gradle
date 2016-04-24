@@ -58,6 +58,7 @@ project(":core") {
         compile "com.underwaterapps.overlap2druntime:overlap2d-runtime-libgdx:0.1.0"
         compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.3"
         compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.13.3"
+		compile files('libs/bodyeditor-loader.jar')
     }
 }
 
