@@ -29,6 +29,8 @@ public class Ship extends Entity {
     private boolean moveRight;
     private boolean moveUp;
     private boolean moveDown;
+    private boolean strafeLeft;
+    private boolean strafeRight;
 
     private Body body;
     private Texture tex;
@@ -55,6 +57,16 @@ public class Ship extends Entity {
             float y1 = (float) Math.cos(body.getAngle()) * 5000;
             float x1 = (float) -Math.sin(body.getAngle()) * 5000;
             body.applyLinearImpulse(new Vector2(x1, y1), body.getWorldCenter(), true);
+        }
+
+        if (isStrafeLeft()) {
+            float y1 = (float) -Math.cos(body.getAngle()) * 5000;
+            float x1 = (float) Math.sin(body.getAngle()) * 5000;
+            body.applyLinearImpulse(new Vector2(x1, y1).rotate90(-1), body.getWorldCenter(), true);
+        } else if (isStrafeRight()) {
+            float y1 = (float) -Math.cos(body.getAngle()) * 5000;
+            float x1 = (float) Math.sin(body.getAngle()) * 5000;
+            body.applyLinearImpulse(new Vector2(x1, y1).rotate90(1), body.getWorldCenter(), true);
         }
     }
 
@@ -152,6 +164,22 @@ public class Ship extends Entity {
      */
     public boolean isMoveDown() {
         return moveDown;
+    }
+
+    public boolean isStrafeLeft() {
+        return strafeLeft;
+    }
+
+    public boolean isStrafeRight() {
+        return strafeRight;
+    }
+
+    public void strafeLeft(boolean isStrafeLeft) {
+        strafeLeft = isStrafeLeft;
+    }
+
+    public void strafeRight(boolean isStrafeRight) {
+        strafeRight = isStrafeRight;
     }
 
 }

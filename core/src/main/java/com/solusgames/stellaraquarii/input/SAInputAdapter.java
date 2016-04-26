@@ -30,15 +30,17 @@ public class SAInputAdapter extends InputAdapter {
         case Keys.A:
             player.moveLeft(true);
             break;
+        case Keys.E:
+            player.strafeRight(true);
+            break;
+        case Keys.Q:
+            player.strafeLeft(true);
+            break;
         case Keys.ESCAPE:
             Gdx.app.exit();
             break;
-        case Keys.Q:
-            break;
-        case Keys.E:
-            break;
         default:
-
+            return false;
         }
         return true;
     }
@@ -59,12 +61,13 @@ public class SAInputAdapter extends InputAdapter {
         case Keys.A:
             player.moveLeft(false);
             break;
-        case Keys.ESCAPE:
-            Gdx.app.exit();
+        case Keys.E:
+            player.strafeRight(false);
             break;
         case Keys.Q:
+            player.strafeLeft(false);
             break;
-        case Keys.E:
+        case Keys.ESCAPE:
             break;
         default:
 
