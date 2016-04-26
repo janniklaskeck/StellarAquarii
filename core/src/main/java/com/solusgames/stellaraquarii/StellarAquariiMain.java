@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.solusgames.stellaraquarii.entity.ship.Ship;
 import com.solusgames.stellaraquarii.input.SAInputAdapter;
+import com.solusgames.stellaraquarii.world.StarSystem;
 
 public class StellarAquariiMain extends ApplicationAdapter {
 
@@ -35,8 +36,8 @@ public class StellarAquariiMain extends ApplicationAdapter {
         oCam = new OrthographicCamera(1280, 720);
         oCam.position.set(oCam.viewportWidth / 2f, oCam.viewportHeight / 2, 0);
         oCam.update();
-
-        createPhysics();
+        initBox2D();
+        new StarSystem("Aquarii 1", 1280, 720);
         Gdx.input.setInputProcessor(new SAInputAdapter(test));
     }
 
@@ -59,7 +60,7 @@ public class StellarAquariiMain extends ApplicationAdapter {
         test.update(Gdx.graphics.getDeltaTime());
     }
 
-    private void createPhysics() {
+    private void initBox2D() {
         Box2D.init();
         dRenderer = new Box2DDebugRenderer();
     }
