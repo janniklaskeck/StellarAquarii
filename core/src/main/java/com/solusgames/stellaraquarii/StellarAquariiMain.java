@@ -33,12 +33,12 @@ public class StellarAquariiMain extends ApplicationAdapter {
         batch = new SpriteBatch();
         FileHandle handle = Gdx.files.internal("badlogic.jpg");
         img = new Texture(handle);
-        oCam = new OrthographicCamera(2560, 1440);
+        oCam = new OrthographicCamera(1280, 720);
         oCam.position.set(oCam.viewportWidth / 2f, oCam.viewportHeight / 2, 0);
         oCam.update();
         initBox2D();
         new StarSystem("Aquarii 1", 2560, 1440);
-        Gdx.input.setInputProcessor(new SAInputAdapter(test));
+        Gdx.input.setInputProcessor(new SAInputAdapter(test, oCam));
     }
 
     @Override
@@ -46,6 +46,7 @@ public class StellarAquariiMain extends ApplicationAdapter {
         update();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        oCam.position.set(test.getBody().getPosition(), 0);
         oCam.update();
         batch.setProjectionMatrix(oCam.combined);
         batch.begin();

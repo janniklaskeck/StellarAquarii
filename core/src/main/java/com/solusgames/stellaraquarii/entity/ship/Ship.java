@@ -3,6 +3,7 @@ package com.solusgames.stellaraquarii.entity.ship;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -35,8 +36,15 @@ public class Ship extends Entity {
     private Body body;
     private Texture tex;
 
+    private float linearSpeed = 0.0f;
+    private float strafeSpeed = 0.0f;
+    private float angularSpeed = 0.0f;
+
+    BitmapFont font;
+
     public Ship(final FileHandle file) {
         super();
+        font = new BitmapFont();
         loadShipFromFile(file);
         tex = new Texture(Gdx.files.internal("ship1/ship1.png"));
     }
@@ -44,30 +52,49 @@ public class Ship extends Entity {
     @Override
     public void update(float deltaTime) {
         if (isMoveRight()) {
-            body.applyTorque(-1000000, true);
+            angularSpeed += -2 * deltaTime;
         } else if (isMoveLeft()) {
-            body.applyTorque(1000000, true);
+            angularSpeed += 2 * deltaTime;
         }
+        final Vector2 forwardVector = new Vector2(-MathUtils.sin(body.getAngle()), MathUtils.cos(body.getAngle()));
+        final Vector2 strafeRightVector = forwardVector.cpy().rotate90(-1);
 
         if (isMoveDown()) {
-            float y1 = (float) -Math.cos(body.getAngle()) * 5000;
-            float x1 = (float) Math.sin(body.getAngle()) * 5000;
-            body.applyLinearImpulse(new Vector2(x1, y1), body.getWorldCenter(), true);
+            linearSpeed += -25 * deltaTime;
         } else if (isMoveUp()) {
-            float y1 = (float) Math.cos(body.getAngle()) * 5000;
-            float x1 = (float) -Math.sin(body.getAngle()) * 5000;
-            body.applyLinearImpulse(new Vector2(x1, y1), body.getWorldCenter(), true);
+            linearSpeed += 25 * deltaTime;
         }
 
         if (isStrafeLeft()) {
-            float y1 = (float) -Math.cos(body.getAngle()) * 5000;
-            float x1 = (float) Math.sin(body.getAngle()) * 5000;
-            body.applyLinearImpulse(new Vector2(x1, y1).rotate90(-1), body.getWorldCenter(), true);
+            strafeSpeed += -25 * deltaTime;
         } else if (isStrafeRight()) {
-            float y1 = (float) -Math.cos(body.getAngle()) * 5000;
-            float x1 = (float) Math.sin(body.getAngle()) * 5000;
-            body.applyLinearImpulse(new Vector2(x1, y1).rotate90(1), body.getWorldCenter(), true);
+            strafeSpeed += 25 * deltaTime;
         }
+
+        final Vector2 moveVector = new Vector2(forwardVector);
+        moveVector.scl(linearSpeed);
+        strafeRightVector.scl(strafeSpeed);
+        moveVector.add(strafeRightVector);
+
+        body.setAngularVelocity(angularSpeed);
+        body.setLinearVelocity(moveVector);
+        angularSpeed = reduceToZero(angularSpeed, 1 * deltaTime);
+        strafeSpeed = reduceToZero(strafeSpeed, 1 * deltaTime);
+    }
+
+    private float reduceToZero(final float value, final float f) {
+        float result = value;
+        if (result > 0) {
+            result -= f;
+        }
+
+        if (result < 0) {
+            result += f;
+        }
+        if (result <= 0.01f && result >= -0.01f) {
+            result = 0;
+        }
+        return result;
     }
 
     @Override
@@ -79,6 +106,7 @@ public class Ship extends Entity {
         float rot = body.getAngle() * MathUtils.radiansToDegrees;
         batch.draw(tex, xpos, ypos, w / 2.0f, h / 2.0f, w, h, 1.0f, 1.0f, rot, 0, 0, tex.getWidth(), tex.getHeight(),
                 false, false);
+        font.draw(batch, "Lin: " + linearSpeed + "\nStrafe: " + strafeSpeed + "\n Ang: " + angularSpeed, xpos, ypos);
 
     }
 
@@ -89,6 +117,8 @@ public class Ship extends Entity {
         BodyDef def = new BodyDef();
         def.position.set(300, 300);
         def.type = BodyType.DynamicBody;
+        // def.angularDamping = 1;
+        // def.linearDamping = 1;
 
         FixtureDef fd = new FixtureDef();
         fd.density = 1.0f;
@@ -180,6 +210,10 @@ public class Ship extends Entity {
 
     public void strafeRight(boolean isStrafeRight) {
         strafeRight = isStrafeRight;
+    }
+
+    public Body getBody() {
+        return body;
     }
 
 }
