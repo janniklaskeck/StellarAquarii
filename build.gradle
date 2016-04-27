@@ -25,6 +25,7 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
+
 }
 
 project(":desktop") {
@@ -58,10 +59,7 @@ project(":core") {
         compile "com.underwaterapps.overlap2druntime:overlap2d-runtime-libgdx:0.1.0"
         compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.3"
         compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.13.3"
-		compile files('libs/bodyeditor-loader.jar')
+        compile files('libs/bodyeditor-loader.jar')
     }
 }
 
-tasks.eclipse.doLast {
-    delete ".project"
-}
