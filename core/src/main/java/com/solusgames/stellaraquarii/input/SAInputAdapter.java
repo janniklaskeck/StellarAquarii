@@ -39,6 +39,9 @@ public class SAInputAdapter extends InputAdapter {
         case Keys.Q:
             player.strafeLeft(true);
             break;
+        case Keys.X:
+            player.stopVelocity();
+            break;
         case Keys.NUM_1:
             oCam.zoom += 0.1f;
             break;

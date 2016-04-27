@@ -2,10 +2,8 @@ package com.solusgames.stellaraquarii;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2D;
@@ -17,24 +15,22 @@ import com.solusgames.stellaraquarii.world.StarSystem;
 
 public class StellarAquariiMain extends ApplicationAdapter {
 
-    SpriteBatch batch;
-    Texture img;
+    private SpriteBatch spriteBatch;
+    private SpriteBatch hudBatch;
     public static final World world = new World(new Vector2(0, 0), true);
     Box2DDebugRenderer dRenderer;
     OrthographicCamera oCam;
-    float x = 100.0f;
-    float y = 300.0f;
 
     Ship test;
 
     @Override
     public void create() {
         test = new Ship(Gdx.files.internal("ship1/body.json"));
-        batch = new SpriteBatch();
-        FileHandle handle = Gdx.files.internal("badlogic.jpg");
-        img = new Texture(handle);
-        oCam = new OrthographicCamera(1280, 720);
+        spriteBatch = new SpriteBatch();
+        hudBatch = new SpriteBatch();
+        oCam = new OrthographicCamera(960, 540);
         oCam.position.set(oCam.viewportWidth / 2f, oCam.viewportHeight / 2, 0);
+        
         oCam.update();
         initBox2D();
         new StarSystem("Aquarii 1", 2560, 1440);
@@ -48,10 +44,14 @@ public class StellarAquariiMain extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         oCam.position.set(test.getBody().getPosition(), 0);
         oCam.update();
-        batch.setProjectionMatrix(oCam.combined);
-        batch.begin();
-        test.render(batch);
-        batch.end();
+        spriteBatch.setProjectionMatrix(oCam.combined);
+        spriteBatch.begin();
+        test.render(spriteBatch);
+        spriteBatch.end();
+
+        hudBatch.begin();
+        test.renderHUD(hudBatch);
+        hudBatch.end();
         dRenderer.render(world, oCam.combined);
 
         world.step(1 / 60f, 6, 2);
@@ -64,6 +64,6 @@ public class StellarAquariiMain extends ApplicationAdapter {
     private void initBox2D() {
         Box2D.init();
         dRenderer = new Box2DDebugRenderer();
-        
+
     }
 }

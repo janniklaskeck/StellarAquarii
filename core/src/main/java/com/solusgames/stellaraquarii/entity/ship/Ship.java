@@ -55,20 +55,24 @@ public class Ship extends Entity {
             angularSpeed += -2 * deltaTime;
         } else if (isMoveLeft()) {
             angularSpeed += 2 * deltaTime;
+        } else {
+            angularSpeed = reduceToZero(angularSpeed, 5 * deltaTime);
         }
         final Vector2 forwardVector = new Vector2(-MathUtils.sin(body.getAngle()), MathUtils.cos(body.getAngle()));
         final Vector2 strafeRightVector = forwardVector.cpy().rotate90(-1);
 
         if (isMoveDown()) {
-            linearSpeed += -25 * deltaTime;
+            linearSpeed += -50 * deltaTime;
         } else if (isMoveUp()) {
-            linearSpeed += 25 * deltaTime;
+            linearSpeed += 50 * deltaTime;
         }
 
         if (isStrafeLeft()) {
-            strafeSpeed += -25 * deltaTime;
+            strafeSpeed += -50 * deltaTime;
         } else if (isStrafeRight()) {
-            strafeSpeed += 25 * deltaTime;
+            strafeSpeed += 50 * deltaTime;
+        } else {
+            strafeSpeed = reduceToZero(strafeSpeed, 10 * deltaTime);
         }
 
         final Vector2 moveVector = new Vector2(forwardVector);
@@ -78,8 +82,7 @@ public class Ship extends Entity {
 
         body.setAngularVelocity(angularSpeed);
         body.setLinearVelocity(moveVector);
-        angularSpeed = reduceToZero(angularSpeed, 1 * deltaTime);
-        strafeSpeed = reduceToZero(strafeSpeed, 1 * deltaTime);
+
     }
 
     private float reduceToZero(final float value, final float f) {
@@ -91,7 +94,7 @@ public class Ship extends Entity {
         if (result < 0) {
             result += f;
         }
-        if (result <= 0.01f && result >= -0.01f) {
+        if (result <= 0.1f && result >= -0.1f) {
             result = 0;
         }
         return result;
@@ -106,8 +109,12 @@ public class Ship extends Entity {
         float rot = body.getAngle() * MathUtils.radiansToDegrees;
         batch.draw(tex, xpos, ypos, w / 2.0f, h / 2.0f, w, h, 1.0f, 1.0f, rot, 0, 0, tex.getWidth(), tex.getHeight(),
                 false, false);
-        font.draw(batch, "Lin: " + linearSpeed + "\nStrafe: " + strafeSpeed + "\n Ang: " + angularSpeed, xpos, ypos);
 
+    }
+
+    public void renderHUD(SpriteBatch batch) {
+        font.draw(batch, "Lin: " + linearSpeed + "\nStrafe: " + strafeSpeed + "\n Ang: " + angularSpeed, 50, 50);
+        font.draw(batch, "LinPX: " + body.getLinearVelocity().x + " LinPY: " + body.getLinearVelocity().y, 50, 150);
     }
 
     private void loadShipFromFile(final FileHandle file) {
@@ -117,11 +124,11 @@ public class Ship extends Entity {
         BodyDef def = new BodyDef();
         def.position.set(300, 300);
         def.type = BodyType.DynamicBody;
-        // def.angularDamping = 1;
-        // def.linearDamping = 1;
+        def.angularDamping = 0;
+        def.linearDamping = 0;
 
         FixtureDef fd = new FixtureDef();
-        fd.density = 1.0f;
+        fd.density = 10000.0f;
         fd.friction = 0.5f;
         fd.restitution = 0.1f;
 
@@ -214,6 +221,12 @@ public class Ship extends Entity {
 
     public Body getBody() {
         return body;
+    }
+
+    public void stopVelocity() {
+        linearSpeed = 0;
+        angularSpeed = 0;
+        strafeSpeed = 0;
     }
 
 }
